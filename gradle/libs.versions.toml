@@ -1,0 +1,5 @@
+[versions]
+jbake-plugin = "5.5.0"
+
+[plugins]
+jbake = { id = "org.jbake.site", version.ref = "jbake-plugin" }
