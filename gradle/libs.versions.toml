@@ -1,5 +1,7 @@
 [versions]
 jbake-plugin = "5.5.0"
+git-publish = "4.1.0"
 
 [plugins]
 jbake = { id = "org.jbake.site", version.ref = "jbake-plugin" }
+git-publish = { id = "org.ajoberstar.git-publish", version.ref = "git-publish" }
