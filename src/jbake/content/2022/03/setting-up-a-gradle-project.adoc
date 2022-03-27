@@ -1,0 +1,12 @@
+= Setting Up A Gradle Project
+Jordan Bergin
+2022-03-27
+:jbake-type: post
+:jbake-status: published
+:jbake-tags: gradle, kotlin, kts
+:idprefix:
+
+
+The intention of this blog post is provide steps that take the user from an empty directory, to a working Gradle project. Making the project do something useful is out of scope.
+
+This blog post will be used as reference point for future blog posts that have a working Gradle project as prerequisite.

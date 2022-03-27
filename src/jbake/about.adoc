@@ -1,0 +1,11 @@
+= About the author
+Jordan Bergin
+2022-03-27
+:jbake-type: page
+:jbake-tags: kotlin
+:jbake-status: published
+:jbake-cached: true
+
+Jordan Bergin is a senior backend engineer working at SO Energy. Whether it's developing Kafka applications/plugins, automating functional testing for REST/gRPC APIs, or provisioning Kubernetes and cloud resources, you can be sure he'll find a way to do it in Kotlin!
+
+The intention of this blog is to be a compendium of his experiences as a backend developer, and hopefully a useful place to learn about tools and technologies such as Kotlin, Gradle, Kafka, Kubernetes or whatever else ends up on his journey in the wonderful world of backend development.
