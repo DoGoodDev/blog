@@ -8,7 +8,8 @@
 	</div>
 	<#else></#if>
 
-	<p><em>${content.date?string("dd MMMM yyyy")}</em></p>
+	<p><em>First Published: ${content.created}</em></p>
+	<p><em>Last Modified: ${content.date?string("dd MMMM yyyy")}</em></p>
 
 	<p>${content.body}</p>
 
