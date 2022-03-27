@@ -1,4 +1,4 @@
-jbake-example-project-groovy
+You Do Good Blog
 ========================
 
-Example project structure for JBake that uses Groovy templates and Bootstrap.
+A do good blog about software
