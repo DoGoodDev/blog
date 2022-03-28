@@ -6,20 +6,95 @@
     <atom:link href="http://youdogood.github.io/blog/feed.xml" rel="self" type="application/rss+xml" />
     <description>JBake Bootstrap Template</description>
     <language>en-gb</language>
-    <pubDate>Sun, 27 Mar 2022 17:09:08 +0000</pubDate>
-    <lastBuildDate>Sun, 27 Mar 2022 17:09:08 +0000</lastBuildDate>
+    <pubDate>Mon, 28 Mar 2022 20:09:21 +0000</pubDate>
+    <lastBuildDate>Mon, 28 Mar 2022 20:09:21 +0000</lastBuildDate>
 
     <item>
       <title>Setting Up A Gradle Project</title>
       <link>http://youdogood.github.io/blog/2022/03/setting-up-a-gradle-project.html</link>
-      <pubDate>Sun, 27 Mar 2022 17:08:09 +0000</pubDate>
+      <pubDate>Mon, 28 Mar 2022 20:08:21 +0000</pubDate>
       <guid isPermaLink="false">2022/03/setting-up-a-gradle-project.html</guid>
       	<description>
-	&lt;div class=&quot;paragraph&quot;&gt;
+	&lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;The intention of this blog post is provide steps that take the user from an empty directory, to a working Gradle project. Making the project do something useful is out of scope.&lt;/p&gt;
 &lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;prerequisites&quot;&gt;Prerequisites&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;This blog post will be used as reference point for future blog posts that have a working Gradle project as prerequisite.&lt;/p&gt;
+&lt;p&gt;This blog post assumes you have Java and Gradle installed on your machine.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;set_up&quot;&gt;Set Up&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;To begin with, create an empty directory with the name of your project. This isn&amp;#8217;t a strict requirement as Gradle does allow you to specify the project&amp;#8217;s name as we will see later on, but it is a sane choice of naming for project folders.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;If you are using Intellij IDEA (recommended) then the default location for your projects would be under your &lt;code&gt;~/IdeaProjects&lt;/code&gt; directory.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;add_gradle_files&quot;&gt;Add Gradle Files&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Create two files in your empty directory, one called &lt;code&gt;build.gradle.kts&lt;/code&gt; and another called &lt;code&gt;settings.gradle.kts&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;create_the_wrapper&quot;&gt;Create The Wrapper&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Gradle wrappers are not actually the Gradle tool themselves, but a tool provided by Gradle, to download a specific version of Gradle specific to this project. The wrapper consists of:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;gradlew&lt;/code&gt; and &lt;code&gt;gradlew.bat&lt;/code&gt; scripts that can run on *nix or Windows machines&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;A &lt;code&gt;gradle-wrapper.jar&lt;/code&gt; which is called by said scripts to download Gradle&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;A &lt;code&gt;gradle-wrapper.properties&lt;/code&gt; file which controls the behaviour of the above script and jar (for example, you can find the URL which is used to download the Gradle version specified by this wrapper)&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The wrapper ensures that for this project you always use the same version of Gradle (since you might have multiple projects each with different Gradle requirements!).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Now, in your directory run the following from your terminal:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;code&gt;gradle wrapper --gradle-version=&amp;lt;YOUR CHOICE OF VERSION HERE&amp;gt;&lt;/code&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;This will initialise the Gradle Wrapper for your project using the specified version. It is advised (unless you have requirements to use older versions) to use the latest Gradle Version published by Gradle.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Note: Now you have defined the wrapper for your project, you no longer need to call the &lt;code&gt;gradle&lt;/code&gt; command, but simply run the &lt;code&gt;./gradlew&lt;/code&gt; script instead, for example if you wanted to upgrade to gradle 7.4.1 you can now do this in your project:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;code&gt;./gradle wrapper --gradle-version=7.4.1&lt;/code&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;summary&quot;&gt;Summary&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;That&amp;#8217;s it, you have created a Gradle project. It may not do anything useful yet, but this is all you need to get started with Gradle. For example, you should now be able to run &lt;code&gt;./gradlew javaToolchains&lt;/code&gt; to have your Gradle project print out what versions of Java it has found on your local machine that it can use.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
 &lt;/div&gt;
 	</description>
     </item>

@@ -56,12 +56,87 @@
 	</div>
   			<a href="2022/03/setting-up-a-gradle-project.html"><h1>Setting Up A Gradle Project</h1></a>
 			<p><em>First Published: 27 March 2022</em></p>
-			<p><em>Last Modified: 27 March 2022</em></p>
-  			<p><div class="paragraph">
+			<p><em>Last Modified: 28 March 2022</em></p>
+  			<p><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
 <p>The intention of this blog post is provide steps that take the user from an empty directory, to a working Gradle project. Making the project do something useful is out of scope.</p>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="prerequisites">Prerequisites</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>This blog post will be used as reference point for future blog posts that have a working Gradle project as prerequisite.</p>
+<p>This blog post assumes you have Java and Gradle installed on your machine.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="set_up">Set Up</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To begin with, create an empty directory with the name of your project. This isn&#8217;t a strict requirement as Gradle does allow you to specify the project&#8217;s name as we will see later on, but it is a sane choice of naming for project folders.</p>
+</div>
+<div class="paragraph">
+<p>If you are using Intellij IDEA (recommended) then the default location for your projects would be under your <code>~/IdeaProjects</code> directory.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="add_gradle_files">Add Gradle Files</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Create two files in your empty directory, one called <code>build.gradle.kts</code> and another called <code>settings.gradle.kts</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="create_the_wrapper">Create The Wrapper</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Gradle wrappers are not actually the Gradle tool themselves, but a tool provided by Gradle, to download a specific version of Gradle specific to this project. The wrapper consists of:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>gradlew</code> and <code>gradlew.bat</code> scripts that can run on *nix or Windows machines</p>
+</li>
+<li>
+<p>A <code>gradle-wrapper.jar</code> which is called by said scripts to download Gradle</p>
+</li>
+<li>
+<p>A <code>gradle-wrapper.properties</code> file which controls the behaviour of the above script and jar (for example, you can find the URL which is used to download the Gradle version specified by this wrapper)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The wrapper ensures that for this project you always use the same version of Gradle (since you might have multiple projects each with different Gradle requirements!).</p>
+</div>
+<div class="paragraph">
+<p>Now, in your directory run the following from your terminal:</p>
+</div>
+<div class="paragraph">
+<p><code>gradle wrapper --gradle-version=&lt;YOUR CHOICE OF VERSION HERE&gt;</code></p>
+</div>
+<div class="paragraph">
+<p>This will initialise the Gradle Wrapper for your project using the specified version. It is advised (unless you have requirements to use older versions) to use the latest Gradle Version published by Gradle.</p>
+</div>
+<div class="paragraph">
+<p>Note: Now you have defined the wrapper for your project, you no longer need to call the <code>gradle</code> command, but simply run the <code>./gradlew</code> script instead, for example if you wanted to upgrade to gradle 7.4.1 you can now do this in your project:</p>
+</div>
+<div class="paragraph">
+<p><code>./gradle wrapper --gradle-version=7.4.1</code></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="summary">Summary</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>That&#8217;s it, you have created a Gradle project. It may not do anything useful yet, but this is all you need to get started with Gradle. For example, you should now be able to run <code>./gradlew javaToolchains</code> to have your Gradle project print out what versions of Java it has found on your local machine that it can use.</p>
+</div>
+</div>
 </div></p>
 	
 	<hr />
