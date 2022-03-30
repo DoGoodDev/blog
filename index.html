@@ -54,9 +54,92 @@
 	<div class="page-header">
 		<h1>Blog</h1>
 	</div>
+  			<a href="2022/03/configuring-kotlin-jvm-with-gradle.html"><h1>Configure A Kotlin JVM</h1></a>
+			<p><em>First Published: 30 March 2022</em></p>
+			<p><em>Last Modified: 30 March 2022</em></p>
+  			<p><div class="sect1">
+<h2 id="prerequisites">Prerequisites</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This blog post assumes you have <a href="https://youdogood.github.io/blog/2022/03/setting-up-a-gradle-project.html">set up a Gradle project</a> already.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="apply_the_kotlin_jvm_plugin">Apply The Kotlin JVM Plugin</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Add the following block to the top of your <code>build.gradle.kts</code> file as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">plugins {
+    kotlin("jvm") version "1.6.20"
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This Gradle plugin will enable your Gradle project to build and a test Kotlin (and Java) code.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configure_the_java_version">Configure the Java version</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>By default, the JDK used to build and test your code will be the same as the one you use to run Gradle. You can&#8217;t control what version of Java people use on their machines so this isn&#8217;t desirable if you want to make sure that Gradle produces the same result regardless of the machine it runs on. To do this simply add the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">kotlin {
+    jvmToolchain {
+        (this as JavaToolchainSpec).languageVersion.set(JavaLanguageVersion.of(17))
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Or whatever version number takes your fancy. Further configuration of the JVM toolchain is out of scope.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="use_junit_platform">Use JUnit Platform</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In the Java world you&#8217;ll often see JUnit used for testing. If you are using JUnit 5 (which is recommended) then you will want to add the following code, too:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">tasks.withType&lt;Test&gt; {
+    useJUnitPlatform()
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This will enable Gradle to run your tests that are written using JUnit 5.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="add_some_dependencies">Add Some Dependencies</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>TBD</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="add_some_code">Add Some Code</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>TBD</p>
+</div>
+</div>
+</div></p>
   			<a href="2022/03/setting-up-a-gradle-project.html"><h1>Setting Up A Gradle Project</h1></a>
 			<p><em>First Published: 27 March 2022</em></p>
-			<p><em>Last Modified: 28 March 2022</em></p>
+			<p><em>Last Modified: 30 March 2022</em></p>
   			<p><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">

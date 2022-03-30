@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8"/>
-    <title>Setting Up A Gradle Project</title>
+    <title>Configure A Kotlin JVM</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -52,90 +52,89 @@
 </div>
 <div class="container">
 	<div class="page-header">
-		<h1>Setting Up A Gradle Project</h1>
+		<h1>Configure A Kotlin JVM</h1>
 	</div>
 
-	<p><em>First Published: 27 March 2022</em></p>
+	<p><em>First Published: 30 March 2022</em></p>
 	<p><em>Last Modified: 30 March 2022</em></p>
 
-	<p><div id="preamble">
-<div class="sectionbody">
-<div class="paragraph">
-<p>The intention of this blog post is provide steps that take the user from an empty directory, to a working Gradle project. Making the project do something useful is out of scope.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
+	<p><div class="sect1">
 <h2 id="prerequisites">Prerequisites</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This blog post assumes you have Java and Gradle installed on your machine.</p>
+<p>This blog post assumes you have <a href="https://youdogood.github.io/blog/2022/03/setting-up-a-gradle-project.html">set up a Gradle project</a> already.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="set_up">Set Up</h2>
+<h2 id="apply_the_kotlin_jvm_plugin">Apply The Kotlin JVM Plugin</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>To begin with, create an empty directory with the name of your project. This isn&#8217;t a strict requirement as Gradle does allow you to specify the project&#8217;s name as we will see later on, but it is a sane choice of naming for project folders.</p>
+<p>Add the following block to the top of your <code>build.gradle.kts</code> file as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">plugins {
+    kotlin("jvm") version "1.6.20"
+}</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>If you are using Intellij IDEA (recommended) then the default location for your projects would be under your <code>~/IdeaProjects</code> directory.</p>
+<p>This Gradle plugin will enable your Gradle project to build and a test Kotlin (and Java) code.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="add_gradle_files">Add Gradle Files</h2>
+<h2 id="configure_the_java_version">Configure the Java version</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Create two files in your empty directory, one called <code>build.gradle.kts</code> and another called <code>settings.gradle.kts</code>.</p>
+<p>By default, the JDK used to build and test your code will be the same as the one you use to run Gradle. You can&#8217;t control what version of Java people use on their machines so this isn&#8217;t desirable if you want to make sure that Gradle produces the same result regardless of the machine it runs on. To do this simply add the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">kotlin {
+    jvmToolchain {
+        (this as JavaToolchainSpec).languageVersion.set(JavaLanguageVersion.of(17))
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Or whatever version number takes your fancy. Further configuration of the JVM toolchain is out of scope.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="create_the_wrapper">Create The Wrapper</h2>
+<h2 id="use_junit_platform">Use JUnit Platform</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Gradle wrappers are not actually the Gradle tool themselves, but a tool provided by Gradle, to download a specific version of Gradle specific to this project. The wrapper consists of:</p>
+<p>In the Java world you&#8217;ll often see JUnit used for testing. If you are using JUnit 5 (which is recommended) then you will want to add the following code, too:</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>gradlew</code> and <code>gradlew.bat</code> scripts that can run on *nix or Windows machines</p>
-</li>
-<li>
-<p>A <code>gradle-wrapper.jar</code> which is called by said scripts to download Gradle</p>
-</li>
-<li>
-<p>A <code>gradle-wrapper.properties</code> file which controls the behaviour of the above script and jar (for example, you can find the URL which is used to download the Gradle version specified by this wrapper)</p>
-</li>
-</ul>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">tasks.withType&lt;Test&gt; {
+    useJUnitPlatform()
+}</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>The wrapper ensures that for this project you always use the same version of Gradle (since you might have multiple projects each with different Gradle requirements!).</p>
-</div>
-<div class="paragraph">
-<p>Now, in your directory run the following from your terminal:</p>
-</div>
-<div class="paragraph">
-<p><code>gradle wrapper --gradle-version=&lt;YOUR CHOICE OF VERSION HERE&gt;</code></p>
-</div>
-<div class="paragraph">
-<p>This will initialise the Gradle Wrapper for your project using the specified version. It is advised (unless you have requirements to use older versions) to use the latest Gradle Version published by Gradle.</p>
-</div>
-<div class="paragraph">
-<p>Note: Now you have defined the wrapper for your project, you no longer need to call the <code>gradle</code> command, but simply run the <code>./gradlew</code> script instead, for example if you wanted to upgrade to gradle 7.4.1 you can now do this in your project:</p>
-</div>
-<div class="paragraph">
-<p><code>./gradle wrapper --gradle-version=7.4.1</code></p>
+<p>This will enable Gradle to run your tests that are written using JUnit 5.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="summary">Summary</h2>
+<h2 id="add_some_dependencies">Add Some Dependencies</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>That&#8217;s it, you have created a Gradle project. It may not do anything useful yet, but this is all you need to get started with Gradle. For example, you should now be able to run <code>./gradlew javaToolchains</code> to have your Gradle project print out what versions of Java it has found on your local machine that it can use.</p>
+<p>TBD</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="add_some_code">Add Some Code</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>TBD</p>
 </div>
 </div>
 </div></p>

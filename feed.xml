@@ -6,13 +6,101 @@
     <atom:link href="http://youdogood.github.io/blog/feed.xml" rel="self" type="application/rss+xml" />
     <description>JBake Bootstrap Template</description>
     <language>en-gb</language>
-    <pubDate>Mon, 28 Mar 2022 20:09:21 +0000</pubDate>
-    <lastBuildDate>Mon, 28 Mar 2022 20:09:21 +0000</lastBuildDate>
+    <pubDate>Wed, 30 Mar 2022 20:21:58 +0000</pubDate>
+    <lastBuildDate>Wed, 30 Mar 2022 20:21:58 +0000</lastBuildDate>
 
+    <item>
+      <title>Configure A Kotlin JVM</title>
+      <link>http://youdogood.github.io/blog/2022/03/configuring-kotlin-jvm-with-gradle.html</link>
+      <pubDate>Wed, 30 Mar 2022 20:20:39 +0000</pubDate>
+      <guid isPermaLink="false">2022/03/configuring-kotlin-jvm-with-gradle.html</guid>
+      	<description>
+	&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;prerequisites&quot;&gt;Prerequisites&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;This blog post assumes you have &lt;a href=&quot;https://youdogood.github.io/blog/2022/03/setting-up-a-gradle-project.html&quot;&gt;set up a Gradle project&lt;/a&gt; already.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;apply_the_kotlin_jvm_plugin&quot;&gt;Apply The Kotlin JVM Plugin&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Add the following block to the top of your &lt;code&gt;build.gradle.kts&lt;/code&gt; file as follows:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlightjs highlight&quot;&gt;&lt;code class=&quot;language-kotlin hljs&quot; data-lang=&quot;kotlin&quot;&gt;plugins {
+    kotlin(&quot;jvm&quot;) version &quot;1.6.20&quot;
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;This Gradle plugin will enable your Gradle project to build and a test Kotlin (and Java) code.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;configure_the_java_version&quot;&gt;Configure the Java version&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;By default, the JDK used to build and test your code will be the same as the one you use to run Gradle. You can&amp;#8217;t control what version of Java people use on their machines so this isn&amp;#8217;t desirable if you want to make sure that Gradle produces the same result regardless of the machine it runs on. To do this simply add the following:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlightjs highlight&quot;&gt;&lt;code class=&quot;language-kotlin hljs&quot; data-lang=&quot;kotlin&quot;&gt;kotlin {
+    jvmToolchain {
+        (this as JavaToolchainSpec).languageVersion.set(JavaLanguageVersion.of(17))
+    }
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Or whatever version number takes your fancy. Further configuration of the JVM toolchain is out of scope.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;use_junit_platform&quot;&gt;Use JUnit Platform&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;In the Java world you&amp;#8217;ll often see JUnit used for testing. If you are using JUnit 5 (which is recommended) then you will want to add the following code, too:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlightjs highlight&quot;&gt;&lt;code class=&quot;language-kotlin hljs&quot; data-lang=&quot;kotlin&quot;&gt;tasks.withType&amp;lt;Test&amp;gt; {
+    useJUnitPlatform()
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;This will enable Gradle to run your tests that are written using JUnit 5.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;add_some_dependencies&quot;&gt;Add Some Dependencies&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;TBD&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;add_some_code&quot;&gt;Add Some Code&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;TBD&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+	</description>
+    </item>
     <item>
       <title>Setting Up A Gradle Project</title>
       <link>http://youdogood.github.io/blog/2022/03/setting-up-a-gradle-project.html</link>
-      <pubDate>Mon, 28 Mar 2022 20:08:21 +0000</pubDate>
+      <pubDate>Wed, 30 Mar 2022 20:20:39 +0000</pubDate>
       <guid isPermaLink="false">2022/03/setting-up-a-gradle-project.html</guid>
       	<description>
 	&lt;div id=&quot;preamble&quot;&gt;
