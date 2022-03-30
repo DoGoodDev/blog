@@ -6,13 +6,13 @@
     <atom:link href="http://youdogood.github.io/blog/feed.xml" rel="self" type="application/rss+xml" />
     <description>JBake Bootstrap Template</description>
     <language>en-gb</language>
-    <pubDate>Wed, 30 Mar 2022 20:21:58 +0000</pubDate>
-    <lastBuildDate>Wed, 30 Mar 2022 20:21:58 +0000</lastBuildDate>
+    <pubDate>Wed, 30 Mar 2022 20:22:19 +0000</pubDate>
+    <lastBuildDate>Wed, 30 Mar 2022 20:22:19 +0000</lastBuildDate>
 
     <item>
       <title>Configure A Kotlin JVM</title>
       <link>http://youdogood.github.io/blog/2022/03/configuring-kotlin-jvm-with-gradle.html</link>
-      <pubDate>Wed, 30 Mar 2022 20:20:39 +0000</pubDate>
+      <pubDate>Wed, 30 Mar 2022 20:21:02 +0000</pubDate>
       <guid isPermaLink="false">2022/03/configuring-kotlin-jvm-with-gradle.html</guid>
       	<description>
 	&lt;div class=&quot;sect1&quot;&gt;
@@ -57,7 +57,7 @@
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Or whatever version number takes your fancy. Further configuration of the JVM toolchain is out of scope.&lt;/p&gt;
+&lt;p&gt;Or whatever version number takes your fancy. Further configuration of the JVM toolchain is out of scope for this blog post.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -100,7 +100,7 @@
     <item>
       <title>Setting Up A Gradle Project</title>
       <link>http://youdogood.github.io/blog/2022/03/setting-up-a-gradle-project.html</link>
-      <pubDate>Wed, 30 Mar 2022 20:20:39 +0000</pubDate>
+      <pubDate>Wed, 30 Mar 2022 20:21:02 +0000</pubDate>
       <guid isPermaLink="false">2022/03/setting-up-a-gradle-project.html</guid>
       	<description>
 	&lt;div id=&quot;preamble&quot;&gt;
