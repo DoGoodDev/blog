@@ -1,0 +1,60 @@
+= Configuring A Kotlin JVM Project With Gradle
+Jordan Bergin
+:jbake-created: 30 March 2022
+:jbake-type: post
+:jbake-status: published
+:jbake-tags: gradle, kotlin
+:idprefix:
+
+== Prerequisites
+
+This blog post assumes you have https://youdogood.github.io/blog/2022/03/setting-up-a-gradle-project.html[set up a Gradle project] already.
+
+== Apply The Kotlin JVM Plugin
+
+Add the following block to the top of your `build.gradle.kts` file as follows:
+
+[source,kotlin]
+----
+plugins {
+    kotlin("jvm") version "1.6.20"
+}
+----
+
+This Gradle plugin will enable your Gradle project to build and a test Kotlin (and Java) code.
+
+== Configure the Java version
+
+By default, the JDK used to build and test your code will be the same as the one you use to run Gradle. You can't control what version of Java people use on their machines so this isn't desirable if you want to make sure that Gradle produces the same result regardless of the machine it runs on. To do this simply add the following:
+
+[source,kotlin]
+----
+kotlin {
+    jvmToolchain {
+        (this as JavaToolchainSpec).languageVersion.set(JavaLanguageVersion.of(17))
+    }
+}
+----
+
+Or whatever version number takes your fancy. Further configuration of the JVM toolchain is out of scope for this blog post.
+
+== Use JUnit Platform
+
+In the Java world you'll often see JUnit used for testing. If you are using JUnit 5 (which is recommended) then you will want to add the following code, too:
+
+[source,kotlin]
+----
+tasks.withType<Test> {
+    useJUnitPlatform()
+}
+----
+
+This will enable Gradle to run your tests that are written using JUnit 5.
+
+== Add Some Dependencies
+
+TBD
+
+== Add Some Code
+
+TBD

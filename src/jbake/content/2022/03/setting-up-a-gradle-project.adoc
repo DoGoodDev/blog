@@ -3,7 +3,7 @@ Jordan Bergin
 :jbake-created: 27 March 2022
 :jbake-type: post
 :jbake-status: published
-:jbake-tags: gradle, kotlin, kts
+:jbake-tags: gradle
 :idprefix:
 
 The intention of this blog post is provide steps that take the user from an empty directory, to a working Gradle project. Making the project do something useful is out of scope.
