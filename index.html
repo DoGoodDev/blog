@@ -135,7 +135,7 @@
 <h2 id="configure_the_java_version">Configure the Java version</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>By default, the JDK used to build and test your code will be the same as the one you use to run Gradle. You can&#8217;t control what version of Java people use on their machines so this isn&#8217;t desirable if you want to make sure that Gradle produces the same result regardless of the machine it runs on. To do this simply add the following:</p>
+<p>You can&#8217;t control what version of Java someone uses to run Gradle, and by default Gradle will build your Kotlin JVM project using that same Java version. This isn&#8217;t desirable if you intend the output of your build to be reproducible. In order to specify that a Kotlin JVM project be built with a specific Java version, the following code should be added:</p>
 </div>
 <div class="listingblock">
 <div class="content">

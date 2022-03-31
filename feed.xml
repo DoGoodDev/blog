@@ -6,13 +6,13 @@
     <atom:link href="http://youdogood.github.io/blog/feed.xml" rel="self" type="application/rss+xml" />
     <description>JBake Bootstrap Template</description>
     <language>en-gb</language>
-    <pubDate>Thu, 31 Mar 2022 19:39:13 +0000</pubDate>
-    <lastBuildDate>Thu, 31 Mar 2022 19:39:13 +0000</lastBuildDate>
+    <pubDate>Thu, 31 Mar 2022 21:35:22 +0000</pubDate>
+    <lastBuildDate>Thu, 31 Mar 2022 21:35:22 +0000</lastBuildDate>
 
     <item>
       <title>Configuring A Kotlin JVM Project With Gradle</title>
       <link>http://youdogood.github.io/blog/2022/03/configuring-a-kotlin-jvm-project-with-gradle.html</link>
-      <pubDate>Thu, 31 Mar 2022 19:38:15 +0000</pubDate>
+      <pubDate>Thu, 31 Mar 2022 21:34:28 +0000</pubDate>
       <guid isPermaLink="false">2022/03/configuring-a-kotlin-jvm-project-with-gradle.html</guid>
       	<description>
 	&lt;div class=&quot;sect1&quot;&gt;
@@ -93,7 +93,7 @@
 &lt;h2 id=&quot;configure_the_java_version&quot;&gt;Configure the Java version&lt;/h2&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;By default, the JDK used to build and test your code will be the same as the one you use to run Gradle. You can&amp;#8217;t control what version of Java people use on their machines so this isn&amp;#8217;t desirable if you want to make sure that Gradle produces the same result regardless of the machine it runs on. To do this simply add the following:&lt;/p&gt;
+&lt;p&gt;You can&amp;#8217;t control what version of Java someone uses to run Gradle, and by default Gradle will build your Kotlin JVM project using that same Java version. This isn&amp;#8217;t desirable if you intend the output of your build to be reproducible. In order to specify that a Kotlin JVM project be built with a specific Java version, the following code should be added:&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;listingblock&quot;&gt;
 &lt;div class=&quot;content&quot;&gt;
@@ -205,7 +205,7 @@ internal class NumbersTest {
     <item>
       <title>Setting Up A Gradle Project</title>
       <link>http://youdogood.github.io/blog/2022/03/setting-up-a-gradle-project.html</link>
-      <pubDate>Thu, 31 Mar 2022 19:38:15 +0000</pubDate>
+      <pubDate>Thu, 31 Mar 2022 21:34:28 +0000</pubDate>
       <guid isPermaLink="false">2022/03/setting-up-a-gradle-project.html</guid>
       	<description>
 	&lt;div id=&quot;preamble&quot;&gt;
