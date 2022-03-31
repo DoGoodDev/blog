@@ -10,6 +10,19 @@ Jordan Bergin
 
 This blog post assumes you have https://youdogood.github.io/blog/2022/03/setting-up-a-gradle-project.html[set up a Gradle project] already.
 
+== Goal Of This Post
+
+The intention of this blog post is for the reader to set up a Kotlin JVM Gradle project (with tests) manually, taking time to understand what each step contributes. The hope is that when the reader faces issues such as:
+
+* JUnit 5 tests not running in Gradle
+* Compiler errors for JUnit 5 annotations
+* Needing to change what JDK a Kotlin project is built with
+* The Kotlin stdlib not being added
+* Unable to resolve external dependencies due to no repository configured
+* Needing to configure new dependencies
+
+They are better equipped (even if only slightly) than if they had jumped straight into a project with a preconfigured template.
+
 == Apply The Kotlin JVM Plugin
 
 Add the following block to the top of your `build.gradle.kts` file as follows:
@@ -22,6 +35,17 @@ plugins {
 ----
 
 This Gradle plugin will enable your Gradle project to build and a test Kotlin (and Java) code.
+
+== Add the mavenCentral repository
+
+There are many kinds of repositories that Gradle can support (file, ivy, maven). What these are and which you should use are out of scope for this blog post. For the purposes of configuring a basic Kotlin project with Gradle `mavenCentral` will suffice. The following block does this:
+
+[source,kotlin]
+----
+repositories {
+    mavenCentral()
+}
+----
 
 == Configure the Java version
 
@@ -53,8 +77,58 @@ This will enable Gradle to run your tests that are written using JUnit 5.
 
 == Add Some Dependencies
 
-TBD
+By default, adding the Kotlin JVM plugin to your Gradle build will configure the Kotlin stdlib as a dependency of all your source sets. Let's add the Kotlin test dependency too, this will enable you to write tests using JUnit 5 (not to be confused with the previous section, which was about _running_ JUnit 5 tests, these two things combined mean you can write and run them).
+
+[source,kotlin]
+----
+dependencies {
+    testImplementation(kotlin("test"))
+}
+----
+
 
 == Add Some Code
 
-TBD
+You should be in a position to write some Kotlin code now, this can be done under the src/main/kotlin folder. Let's walk through a simple example of adding a function which checks if a number is even or not, add the following code:
+
+[source,kotlin]
+----
+package dev.youdogood.blog
+
+fun isEven(number: Int) = number and 1 == 0
+----
+
+To the following file in your project:
+
+`src/main/kotlin/dev/youdogood/blog/numbers.kt`
+
+== Add Some Tests
+
+Since we've gone to the effort of setting up JUnit 5 with this Kotlin project, we should make use of it. Add the following code to `src/main/kotlin/dev/youdogood/blog/NumbersTest.kt`:
+
+[source,kotlin]
+----
+package dev.youdogood.blog
+
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.Assertions.assertFalse
+
+internal class NumbersTest {
+
+    @Test
+    fun `given the function isEven, when the input is odd, then the return value is false`() {
+        val oddNumber = 5
+
+        val result = isEven(oddNumber)
+
+        assertFalse(result)
+    }
+}
+
+----
+
+You should now be able to run the following Gradle task:
+
+`./gradlew test`
+
+And it should show you one successful test has run!
