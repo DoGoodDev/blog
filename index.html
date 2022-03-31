@@ -56,12 +56,45 @@
 	</div>
   			<a href="2022/03/configuring-a-kotlin-jvm-project-with-gradle.html"><h1>Configuring A Kotlin JVM Project With Gradle</h1></a>
 			<p><em>First Published: 30 March 2022</em></p>
-			<p><em>Last Modified: 30 March 2022</em></p>
+			<p><em>Last Modified: 31 March 2022</em></p>
   			<p><div class="sect1">
 <h2 id="prerequisites">Prerequisites</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This blog post assumes you have <a href="https://youdogood.github.io/blog/2022/03/setting-up-a-gradle-project.html">set up a Gradle project</a> already.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="goal_of_this_post">Goal Of This Post</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The intention of this blog post is for the reader to set up a Kotlin JVM Gradle project (with tests) manually, taking time to understand what each step contributes. The hope is that when the reader faces issues such as:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>JUnit 5 tests not running in Gradle</p>
+</li>
+<li>
+<p>Compiler errors for JUnit 5 annotations</p>
+</li>
+<li>
+<p>Needing to change what JDK a Kotlin project is built with</p>
+</li>
+<li>
+<p>The Kotlin stdlib not being added</p>
+</li>
+<li>
+<p>Unable to resolve external dependencies due to no repository configured</p>
+</li>
+<li>
+<p>Needing to configure new dependencies</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>They are better equipped (even if only slightly) than if they had jumped straight into a project with a preconfigured template.</p>
 </div>
 </div>
 </div>
@@ -80,6 +113,21 @@
 </div>
 <div class="paragraph">
 <p>This Gradle plugin will enable your Gradle project to build and a test Kotlin (and Java) code.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="add_the_mavencentral_repository">Add the mavenCentral repository</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>There are many kinds of repositories that Gradle can support (file, ivy, maven). What these are and which you should use are out of scope for this blog post. For the purposes of configuring a basic Kotlin project with Gradle <code>mavenCentral</code> will suffice. The following block does this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">repositories {
+    mavenCentral()
+}</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -125,7 +173,14 @@
 <h2 id="add_some_dependencies">Add Some Dependencies</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>TBD</p>
+<p>By default, adding the Kotlin JVM plugin to your Gradle build will configure the Kotlin stdlib as a dependency of all your source sets. Let&#8217;s add the Kotlin test dependency too, this will enable you to write tests using JUnit 5 (not to be confused with the previous section, which was about <em>running</em> JUnit 5 tests, these two things combined mean you can write and run them).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">dependencies {
+    testImplementation(kotlin("test"))
+}</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -133,13 +188,63 @@
 <h2 id="add_some_code">Add Some Code</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>TBD</p>
+<p>You should be in a position to write some Kotlin code now, this can be done under the src/main/kotlin folder. Let&#8217;s walk through a simple example of adding a function which checks if a number is even or not, add the following code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">package dev.youdogood.blog
+
+fun isEven(number: Int) = number and 1 == 0</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To the following file in your project:</p>
+</div>
+<div class="paragraph">
+<p><code>src/main/kotlin/dev/youdogood/blog/numbers.kt</code></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="add_some_tests">Add Some Tests</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Since we&#8217;ve gone to the effort of setting up JUnit 5 with this Kotlin project, we should make use of it. Add the following code to <code>src/main/kotlin/dev/youdogood/blog/NumbersTest.kt</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">package dev.youdogood.blog
+
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.Assertions.assertFalse
+
+internal class NumbersTest {
+
+    @Test
+    fun `given the function isEven, when the input is odd, then the return value is false`() {
+        val oddNumber = 5
+
+        val result = isEven(oddNumber)
+
+        assertFalse(result)
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You should now be able to run the following Gradle task:</p>
+</div>
+<div class="paragraph">
+<p><code>./gradlew test</code></p>
+</div>
+<div class="paragraph">
+<p>And it should show you one successful test has run!</p>
 </div>
 </div>
 </div></p>
   			<a href="2022/03/setting-up-a-gradle-project.html"><h1>Setting Up A Gradle Project</h1></a>
 			<p><em>First Published: 27 March 2022</em></p>
-			<p><em>Last Modified: 30 March 2022</em></p>
+			<p><em>Last Modified: 31 March 2022</em></p>
   			<p><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
