@@ -6,13 +6,13 @@
     <atom:link href="http://youdogood.github.io/blog/feed.xml" rel="self" type="application/rss+xml" />
     <description>JBake Bootstrap Template</description>
     <language>en-gb</language>
-    <pubDate>Thu, 31 Mar 2022 21:35:22 +0000</pubDate>
-    <lastBuildDate>Thu, 31 Mar 2022 21:35:22 +0000</lastBuildDate>
+    <pubDate>Fri, 1 Apr 2022 20:13:03 +0000</pubDate>
+    <lastBuildDate>Fri, 1 Apr 2022 20:13:03 +0000</lastBuildDate>
 
     <item>
       <title>Configuring A Kotlin JVM Project With Gradle</title>
       <link>http://youdogood.github.io/blog/2022/03/configuring-a-kotlin-jvm-project-with-gradle.html</link>
-      <pubDate>Thu, 31 Mar 2022 21:34:28 +0000</pubDate>
+      <pubDate>Fri, 1 Apr 2022 20:11:42 +0000</pubDate>
       <guid isPermaLink="false">2022/03/configuring-a-kotlin-jvm-project-with-gradle.html</guid>
       	<description>
 	&lt;div class=&quot;sect1&quot;&gt;
@@ -203,9 +203,155 @@ internal class NumbersTest {
 	</description>
     </item>
     <item>
+      <title>Configuring A Kotlin Docker Application In Gradle</title>
+      <link>http://youdogood.github.io/blog/2022/04/configuring-a-kotlin-docker-application-in-gradle.html</link>
+      <pubDate>Fri, 1 Apr 2022 20:11:42 +0000</pubDate>
+      <guid isPermaLink="false">2022/04/configuring-a-kotlin-docker-application-in-gradle.html</guid>
+      	<description>
+	&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;prerequisites&quot;&gt;Prerequisites&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;This blog post assumes you have &lt;a href=&quot;https://youdogood.github.io/blog/2022/03/configuring-a-kotlin-jvm-project-with-gradle.html&quot;&gt;set up a Kotlin JVM project with Gradle&lt;/a&gt; already.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Knowledge about docker, or having docker installed is not necessary, but if you want to run the image you create at the end then you will need it. Installation of docker is out of scope for this blog.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;goal_of_this_post&quot;&gt;Goal Of This Post&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The goal of this blog post is configure a simple Kotlin command line application using Gradle, and then packaging that application as a docker image.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;apply_the_jib_gradle_plugin&quot;&gt;Apply The Jib Gradle Plugin&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Apply the &lt;a href=&quot;https://github.com/GoogleContainerTools/jib/tree/master/jib-gradle-plugin&quot;&gt;jib gradle plugin&lt;/a&gt; by adding the following code to your plugins block:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlightjs highlight&quot;&gt;&lt;code class=&quot;language-kotlin hljs&quot; data-lang=&quot;kotlin&quot;&gt;plugins {
+    id(&quot;com.google.cloud.tools.jib&quot;) version &quot;3.2.1&quot;
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The GitHub page for jib alone contains brilliant documentation on what it is for an how to use it, so it is recommended to go read that for further information, but to summarise:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Jib is a tool made by Google to create Docker and OCI images &lt;em&gt;without&lt;/em&gt; having docker installed. It is specifically for packaging Java applications and intelligently layers different parts of a Java application (the dependency jars, project dependencies, application classes etc). This often results in the images being built faster as the layers can be reused if they haven&amp;#8217;t changed (a good example would be there&amp;#8217;s no rebuild of the dependencies layer if you have just changed some source code).&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;add_a_main_class&quot;&gt;Add a Main class&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Assuming that you have the code from the prerequisite blog post, add a new file under &lt;code&gt;dev.youdogood.blog&lt;/code&gt; called &lt;code&gt;main.kt&lt;/code&gt;:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlightjs highlight&quot;&gt;&lt;code class=&quot;language-kotlin hljs&quot; data-lang=&quot;kotlin&quot;&gt;package dev.youdogood.blog
+
+fun main() {
+    listOf(&quot;1&quot;, &quot;2&quot;, &quot;egg&quot;).forEach { item -&amp;gt;
+        val itemAsNumber = item.toIntOrNull()
+        if (itemAsNumber == null) {
+            println(&quot;$item is not a number!&quot;)
+            return
+        }
+
+        val output = if (isEven(itemAsNumber)) &quot;$itemAsNumber is even!&quot; else &quot;$itemAsNumber is odd!&quot;
+        println(output)
+    }
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The reason we want a main class is when a docker image is run, it needs to know which class to start with in our code. You can specify the main class in the &lt;code&gt;jib&lt;/code&gt; configuration in your &lt;code&gt;build.gradle.kts&lt;/code&gt; file, but in our case it&amp;#8217;s unambiguous (we have only one main function) so jib will pick this up automatically.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;build_the_docker_image&quot;&gt;Build The Docker Image&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;There are three tasks provided by &lt;code&gt;jib&lt;/code&gt;:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;jib&lt;/code&gt; - builds a docker image and pushes it to a registry (out of scope for this blog)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;jibBuildTar&lt;/code&gt; - builds the docker image as a &lt;code&gt;.tar&lt;/code&gt; file, and stores it to disk&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;jibDockerBuild&lt;/code&gt; - builds the docker image (without the daemon), and then pushes it to your local docker daemon&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;If you haven&amp;#8217;t configured docker you can run the &lt;code&gt;jibBuildTar&lt;/code&gt; task to see your docker image get built, but for the next section we&amp;#8217;ll be using &lt;code&gt;jibDockerBuild&lt;/code&gt; which requires docker to be running locally (setting up docker locally is out of scope for this blog post, and it&amp;#8217;s recommended you follow another guide online).&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;run_the_docker_image&quot;&gt;Run The Docker Image&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Assuming you&amp;#8217;ve run &lt;code&gt;jibDockerBuild&lt;/code&gt; in the previous step you should now have a docker image you can run. The name of your image will be of the format &lt;code&gt;projectName:version&lt;/code&gt;. For example my project is called &lt;code&gt;blog-code&lt;/code&gt; and the version was &lt;code&gt;1.0-SNAPSHOT&lt;/code&gt;, the gradle task printed out the following at the end:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;code&gt;Built image to Docker daemon as blog-code:1.0-SNAPSHOT&lt;/code&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;So now I can run in my terminal the following:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;code&gt;docker run blog-code:1.0-SNAPSHOT&lt;/code&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;With the following output:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre&gt;1 is odd!
+2 is even!
+egg is not a number!&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;further_use_cases&quot;&gt;Further Use Cases&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;In later blogs I&amp;#8217;m hoping to explore some less obvious use cases of &lt;code&gt;jib&lt;/code&gt;, such as:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Locally running &lt;code&gt;kafka-connect&lt;/code&gt; plugins bundled together using Gradle&amp;#8217;s dependency resolution functionality (hint: kafka-connect just needs to know what directory the plugins are going to be in, and &lt;code&gt;jib&lt;/code&gt; copy resolved dependencies to a certain directory in to docker image!)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Creating custom &lt;code&gt;Keycloak&lt;/code&gt; images that you can add your own themes or custom SPIs to (service provider interfaces, these can let you do awesome things like integrate Keycloak events with Kafka).&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+	</description>
+    </item>
+    <item>
       <title>Setting Up A Gradle Project</title>
       <link>http://youdogood.github.io/blog/2022/03/setting-up-a-gradle-project.html</link>
-      <pubDate>Thu, 31 Mar 2022 21:34:28 +0000</pubDate>
+      <pubDate>Fri, 1 Apr 2022 20:11:42 +0000</pubDate>
       <guid isPermaLink="false">2022/03/setting-up-a-gradle-project.html</guid>
       	<description>
 	&lt;div id=&quot;preamble&quot;&gt;
