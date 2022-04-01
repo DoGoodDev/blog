@@ -1,0 +1,92 @@
+= Configuring A Kotlin Docker Application In Gradle
+Jordan Bergin
+:jbake-created: 01 April 2022
+:jbake-type: post
+:jbake-status: published
+:jbake-tags: gradle, kotlin, docker, jib
+:idprefix:
+
+== Prerequisites
+
+This blog post assumes you have https://youdogood.github.io/blog/2022/03/configuring-a-kotlin-jvm-project-with-gradle.html[set up a Kotlin JVM project with Gradle] already.
+
+Knowledge about docker, or having docker installed is not necessary, but if you want to run the image you create at the end then you will need it. Installation of docker is out of scope for this blog.
+
+== Goal Of This Post
+
+The goal of this blog post is configure a simple Kotlin command line application using Gradle, and then packaging that application as a docker image.
+
+== Apply The Jib Gradle Plugin
+
+Apply the https://github.com/GoogleContainerTools/jib/tree/master/jib-gradle-plugin[jib gradle plugin] by adding the following code to your plugins block:
+
+[source,kotlin]
+----
+plugins {
+    id("com.google.cloud.tools.jib") version "3.2.1"
+}
+----
+
+The GitHub page for jib alone contains brilliant documentation on what it is for an how to use it, so it is recommended to go read that for further information, but to summarise:
+
+Jib is a tool made by Google to create Docker and OCI images _without_ having docker installed. It is specifically for packaging Java applications and intelligently layers different parts of a Java application (the dependency jars, project dependencies, application classes etc). This often results in the images being built faster as the layers can be reused if they haven't changed (a good example would be there's no rebuild of the dependencies layer if you have just changed some source code).
+
+== Add a Main class
+
+Assuming that you have the code from the prerequisite blog post, add a new file under `dev.youdogood.blog` called `main.kt`:
+
+[source,kotlin]
+----
+package dev.youdogood.blog
+
+fun main() {
+    listOf("1", "2", "egg").forEach { item ->
+        val itemAsNumber = item.toIntOrNull()
+        if (itemAsNumber == null) {
+            println("$item is not a number!")
+            return
+        }
+
+        val output = if (isEven(itemAsNumber)) "$itemAsNumber is even!" else "$itemAsNumber is odd!"
+        println(output)
+    }
+}
+----
+
+The reason we want a main class is when a docker image is run, it needs to know which class to start with in our code. You can specify the main class in the `jib` configuration in your `build.gradle.kts` file, but in our case it's unambiguous (we have only one main function) so jib will pick this up automatically.
+
+== Build The Docker Image
+
+There are three tasks provided by `jib`:
+
+* `jib` - builds a docker image and pushes it to a registry (out of scope for this blog)
+* `jibBuildTar` - builds the docker image as a `.tar` file, and stores it to disk
+* `jibDockerBuild` - builds the docker image (without the daemon), and then pushes it to your local docker daemon
+
+If you haven't configured docker you can run the `jibBuildTar` task to see your docker image get built, but for the next section we'll be using `jibDockerBuild` which requires docker to be running locally (setting up docker locally is out of scope for this blog post, and it's recommended you follow another guide online).
+
+== Run The Docker Image
+
+Assuming you've run `jibDockerBuild` in the previous step you should now have a docker image you can run. The name of your image will be of the format `projectName:version`. For example my project is called `blog-code` and the version was `1.0-SNAPSHOT`, the gradle task printed out the following at the end:
+
+`Built image to Docker daemon as blog-code:1.0-SNAPSHOT`
+
+So now I can run in my terminal the following:
+
+`docker run blog-code:1.0-SNAPSHOT`
+
+With the following output:
+
+----
+1 is odd!
+2 is even!
+egg is not a number!
+----
+
+== Further Use Cases
+
+In later blogs I'm hoping to explore some less obvious use cases of `jib`, such as:
+
+* Locally running `kafka-connect` plugins bundled together using Gradle's dependency resolution functionality (hint: kafka-connect just needs to know what directory the plugins are going to be in, and `jib` copy resolved dependencies to a certain directory in to docker image!)
+
+* Creating custom `Keycloak` images that you can add your own themes or custom SPIs to (service provider interfaces, these can let you do awesome things like integrate Keycloak events with Kafka).
