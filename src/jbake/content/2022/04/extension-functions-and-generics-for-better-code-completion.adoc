@@ -1,0 +1,70 @@
+= Extension Functions And Generics For Better Code Completion
+Jordan Bergin
+:jbake-created: 04 April 2022
+:jbake-type: post
+:jbake-status: published
+:jbake-tags: kotlin, kotlin tips
+:idprefix:
+
+== Prerequisites
+
+A basic understanding of:
+
+* Generics
+* Extension Functions
+
+Preferably in Kotlin
+
+== Goal Of This Post
+
+This post is to convey one of the features I find extremely useful when both reading and writing Kotlin.
+
+== The Problem
+
+When you have a parameterized type such as a `List`, you come across operations on it that makes sense depending on what type is used as the type parameter. For example the following functions would make sense on `List<Int>`:
+
+* sum
+* min
+* max
+
+We could add these functions to the `List` interface, but then of course how do you handle say, as `List<File>`? Would such functions appearing in your auto-complete make any sense? And what would you expect the result to be if you did end up calling this function on a `List<File>` at runtime?
+
+Hopefully it's clear polluting the `List` interface itself isn't an option.
+
+Another potential solution would be to add specific types such as `class IntList : List<Int>` and implement the specific functions there? But this does little to help you unless you have the discipline (masochism?) to use the new type everywhere, and add the necessary noise to wrap every `List<Int>` you encounter with an `IntList`.
+
+If we were in Java land I would add such functions as a static method on a utility class - this doesn't pollute your namespace, or add any new types. It does, however, place the burden on the developer to remember such a function exists in a specific place (e.g. through good documentation), if they fail to do so they may add a dependency to solve the problem, or add another static method in an util class (which I've definitely been guilty of in my career!).
+
+Hopefully it's clear though that this isn't sustainable, no-one is going to hold in their head all of these possible utility functions, and as code bases grow maintaining and keeping up to date on internal documentation will grow stale. (I would like to take this moment to point out though I think the JDK has done a decent job organising static methods in classes such as `Collections` and `Files`, though!)
+
+So what does this have to do with extension functions and generics?
+
+== The Solution
+
+The solution (at least in Kotlin) is very close to the static method in a utility class described above, but instead of being a method which your generic type (`List<Int>`) is passed in as a parameter, you simply define an extension function on that type (with the type parameter set), like so:
+
+[source,kotlin]
+----
+fun List<Int>.sum(): Int {
+    var sum = 0
+    for (element in this) {
+        sum += element
+    }
+    return sum
+}
+----
+
+The key difference here is by using an extension function the compiler can serve as a tool to find this function when you are auto-completing for this generic type, and you show you what is available. In fact, I found the function (it's actually defined in `Iterable<Int>`, but I find `List<Int>` easier to read) above by typing the following:
+
+[source,kotlin]
+----
+listOf(1, 2, 3).sum()
+----
+
+As I began typing "sum", the compiler is able to show me the `sum` function exists, if I tried the same for `listOf("hello", "world")` it wouldn't display the `sum` function, as no such extension function exists for `List<String>`. What this means is you can different auto complete results depending on your _parameter type_, not just your type! (this is something I had never seen in Java, and I'm not sure if it's possible to achieve)
+
+== Closing Remark
+
+I truly find this one of most powerful features for communicating the code I write to fellow developers. Previously I never felt 100% confident (no matter how well I organised my code base) that utility functions for specific generic types would be found. But so long as I choose sensible types and type parameters for my extensions functions I can be rest assured that the compiler will do the rest to surface the appropriate available functions to them.
+
+This isn't to say that organising your code no longer matters! Well organised code will always be necessary to be able to navigate and understand any code base, it's that a problem that couldn't be solved with well organised code now has a secret weapon!
