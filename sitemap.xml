@@ -6,14 +6,18 @@
     </url>
     <url>
         <loc>http://youdogood.github.io/blog/2022/03/configuring-a-kotlin-jvm-project-with-gradle.html</loc>
-        <lastmod>2022-04-01</lastmod>
+        <lastmod>2022-04-04</lastmod>
+    </url>
+    <url>
+        <loc>http://youdogood.github.io/blog/2022/04/extension-functions-and-generics-for-better-code-completion.html</loc>
+        <lastmod>2022-04-04</lastmod>
     </url>
     <url>
         <loc>http://youdogood.github.io/blog/2022/04/configuring-a-kotlin-docker-application-in-gradle.html</loc>
-        <lastmod>2022-04-01</lastmod>
+        <lastmod>2022-04-04</lastmod>
     </url>
     <url>
         <loc>http://youdogood.github.io/blog/2022/03/setting-up-a-gradle-project.html</loc>
-        <lastmod>2022-04-01</lastmod>
+        <lastmod>2022-04-04</lastmod>
     </url>
 </urlset>

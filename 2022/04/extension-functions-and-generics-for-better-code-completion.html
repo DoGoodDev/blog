@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Extension Functions And Generics For Better Code Completion</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="keywords" content="">
+    <meta name="generator" content="JBake">
+
+    <!-- Le styles -->
+    <link href="../../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../css/asciidoctor.css" rel="stylesheet">
+    <link href="../../css/base.css" rel="stylesheet">
+    <link href="../../css/prettify.css" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+    <!--<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">-->
+    <link rel="shortcut icon" href="../../favicon.ico">
+  </head>
+  <body onload="prettyPrint()">
+    <div id="wrap">
+	
+<!-- Fixed navbar -->
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="../../index.html">You Do Good blog</a>
+    </div>
+
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li><a href="../../about.html">About</a></li>
+        <li><a href="../../tags/index.html">Tags</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div class="container">
+	<div class="page-header">
+		<h1>Extension Functions And Generics For Better Code Completion</h1>
+	</div>
+
+	<p><em>First Published: 04 April 2022</em></p>
+	<p><em>Last Modified: 04 April 2022</em></p>
+
+	<p><div class="sect1">
+<h2 id="prerequisites">Prerequisites</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A basic understanding of:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Generics</p>
+</li>
+<li>
+<p>Extension Functions</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Preferably in Kotlin</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="goal_of_this_post">Goal Of This Post</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This post is to convey one of the features I find extremely useful when both reading and writing Kotlin.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="the_problem">The Problem</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When you have a parameterized type such as a <code>List</code>, you come across operations on it that makes sense depending on what type is used as the type parameter. For example the following functions would make sense on <code>List&lt;Int&gt;</code>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>sum</p>
+</li>
+<li>
+<p>min</p>
+</li>
+<li>
+<p>max</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>We could add these functions to the <code>List</code> interface, but then of course how do you handle say, as <code>List&lt;File&gt;</code>? Would such functions appearing in your auto-complete make any sense? And what would you expect the result to be if you did end up calling this function on a <code>List&lt;File&gt;</code> at runtime?</p>
+</div>
+<div class="paragraph">
+<p>Hopefully it&#8217;s clear polluting the <code>List</code> interface itself isn&#8217;t an option.</p>
+</div>
+<div class="paragraph">
+<p>Another potential solution would be to add specific types such as <code>class IntList : List&lt;Int&gt;</code> and implement the specific functions there? But this does little to help you unless you have the discipline (masochism?) to use the new type everywhere, and add the necessary noise to wrap every <code>List&lt;Int&gt;</code> you encounter with an <code>IntList</code>.</p>
+</div>
+<div class="paragraph">
+<p>If we were in Java land I would add such functions as a static method on a utility class - this doesn&#8217;t pollute your namespace, or add any new types. It does, however, place the burden on the developer to remember such a function exists in a specific place (e.g. through good documentation), if they fail to do so they may add a dependency to solve the problem, or add another static method in an util class (which I&#8217;ve definitely been guilty of in my career!).</p>
+</div>
+<div class="paragraph">
+<p>Hopefully it&#8217;s clear though that this isn&#8217;t sustainable, no-one is going to hold in their head all of these possible utility functions, and as code bases grow maintaining and keeping up to date on internal documentation will grow stale. (I would like to take this moment to point out though I think the JDK has done a decent job organising static methods in classes such as <code>Collections</code> and <code>Files</code>, though!)</p>
+</div>
+<div class="paragraph">
+<p>So what does this have to do with extension functions and generics?</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="the_solution">The Solution</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The solution (at least in Kotlin) is very close to the static method in a utility class described above, but instead of being a method which your generic type (<code>List&lt;Int&gt;</code>) is passed in as a parameter, you simply define an extension function on that type (with the type parameter set), like so:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">fun List&lt;Int&gt;.sum(): Int {
+    var sum = 0
+    for (element in this) {
+        sum += element
+    }
+    return sum
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The key difference here is by using an extension function the compiler can serve as a tool to find this function when you are auto-completing for this generic type, and you show you what is available. In fact, I found the function (it&#8217;s actually defined in <code>Iterable&lt;Int&gt;</code>, but I find <code>List&lt;Int&gt;</code> easier to read) above by typing the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">listOf(1, 2, 3).sum()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As I began typing "sum", the compiler is able to show me the <code>sum</code> function exists, if I tried the same for <code>listOf("hello", "world")</code> it wouldn&#8217;t display the <code>sum</code> function, as no such extension function exists for <code>List&lt;String&gt;</code>. What this means is you can different auto complete results depending on your <em>parameter type</em>, not just your type! (this is something I had never seen in Java, and I&#8217;m not sure if it&#8217;s possible to achieve)</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="closing_remark">Closing Remark</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>I truly find this one of most powerful features for communicating the code I write to fellow developers. Previously I never felt 100% confident (no matter how well I organised my code base) that utility functions for specific generic types would be found. But so long as I choose sensible types and type parameters for my extensions functions I can be rest assured that the compiler will do the rest to surface the appropriate available functions to them.</p>
+</div>
+<div class="paragraph">
+<p>This isn&#8217;t to say that organising your code no longer matters! Well organised code will always be necessary to be able to navigate and understand any code base, it&#8217;s that a problem that couldn&#8217;t be solved with well organised code now has a secret weapon!</p>
+</div>
+</div>
+</div></p>
+
+	<hr />
+	
+		</div>
+		<div id="push"></div>
+    </div>
+    
+    <div id="footer">
+      <div class="container">
+        <p class="muted credit">&copy; 2014 | Mixed with <a href="http://getbootstrap.com/">Bootstrap v3.1.1</a> | Baked with <a href="http://jbake.org">JBake v2.6.6</a></p>
+      </div>
+    </div>
+    
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="../../js/jquery-1.11.1.min.js"></script>
+    <script src="../../js/bootstrap.min.js"></script>
+    <script src="../../js/prettify.js"></script>
+    
+  </body>
+</html>

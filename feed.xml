@@ -6,13 +6,13 @@
     <atom:link href="http://youdogood.github.io/blog/feed.xml" rel="self" type="application/rss+xml" />
     <description>JBake Bootstrap Template</description>
     <language>en-gb</language>
-    <pubDate>Fri, 1 Apr 2022 20:13:03 +0000</pubDate>
-    <lastBuildDate>Fri, 1 Apr 2022 20:13:03 +0000</lastBuildDate>
+    <pubDate>Mon, 4 Apr 2022 20:06:49 +0000</pubDate>
+    <lastBuildDate>Mon, 4 Apr 2022 20:06:49 +0000</lastBuildDate>
 
     <item>
       <title>Configuring A Kotlin JVM Project With Gradle</title>
       <link>http://youdogood.github.io/blog/2022/03/configuring-a-kotlin-jvm-project-with-gradle.html</link>
-      <pubDate>Fri, 1 Apr 2022 20:11:42 +0000</pubDate>
+      <pubDate>Mon, 4 Apr 2022 20:05:38 +0000</pubDate>
       <guid isPermaLink="false">2022/03/configuring-a-kotlin-jvm-project-with-gradle.html</guid>
       	<description>
 	&lt;div class=&quot;sect1&quot;&gt;
@@ -203,9 +203,126 @@ internal class NumbersTest {
 	</description>
     </item>
     <item>
+      <title>Extension Functions And Generics For Better Code Completion</title>
+      <link>http://youdogood.github.io/blog/2022/04/extension-functions-and-generics-for-better-code-completion.html</link>
+      <pubDate>Mon, 4 Apr 2022 20:05:38 +0000</pubDate>
+      <guid isPermaLink="false">2022/04/extension-functions-and-generics-for-better-code-completion.html</guid>
+      	<description>
+	&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;prerequisites&quot;&gt;Prerequisites&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;A basic understanding of:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Generics&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Extension Functions&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Preferably in Kotlin&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;goal_of_this_post&quot;&gt;Goal Of This Post&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;This post is to convey one of the features I find extremely useful when both reading and writing Kotlin.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;the_problem&quot;&gt;The Problem&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;When you have a parameterized type such as a &lt;code&gt;List&lt;/code&gt;, you come across operations on it that makes sense depending on what type is used as the type parameter. For example the following functions would make sense on &lt;code&gt;List&amp;lt;Int&amp;gt;&lt;/code&gt;:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;sum&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;min&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;max&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We could add these functions to the &lt;code&gt;List&lt;/code&gt; interface, but then of course how do you handle say, as &lt;code&gt;List&amp;lt;File&amp;gt;&lt;/code&gt;? Would such functions appearing in your auto-complete make any sense? And what would you expect the result to be if you did end up calling this function on a &lt;code&gt;List&amp;lt;File&amp;gt;&lt;/code&gt; at runtime?&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Hopefully it&amp;#8217;s clear polluting the &lt;code&gt;List&lt;/code&gt; interface itself isn&amp;#8217;t an option.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Another potential solution would be to add specific types such as &lt;code&gt;class IntList : List&amp;lt;Int&amp;gt;&lt;/code&gt; and implement the specific functions there? But this does little to help you unless you have the discipline (masochism?) to use the new type everywhere, and add the necessary noise to wrap every &lt;code&gt;List&amp;lt;Int&amp;gt;&lt;/code&gt; you encounter with an &lt;code&gt;IntList&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;If we were in Java land I would add such functions as a static method on a utility class - this doesn&amp;#8217;t pollute your namespace, or add any new types. It does, however, place the burden on the developer to remember such a function exists in a specific place (e.g. through good documentation), if they fail to do so they may add a dependency to solve the problem, or add another static method in an util class (which I&amp;#8217;ve definitely been guilty of in my career!).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Hopefully it&amp;#8217;s clear though that this isn&amp;#8217;t sustainable, no-one is going to hold in their head all of these possible utility functions, and as code bases grow maintaining and keeping up to date on internal documentation will grow stale. (I would like to take this moment to point out though I think the JDK has done a decent job organising static methods in classes such as &lt;code&gt;Collections&lt;/code&gt; and &lt;code&gt;Files&lt;/code&gt;, though!)&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;So what does this have to do with extension functions and generics?&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;the_solution&quot;&gt;The Solution&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The solution (at least in Kotlin) is very close to the static method in a utility class described above, but instead of being a method which your generic type (&lt;code&gt;List&amp;lt;Int&amp;gt;&lt;/code&gt;) is passed in as a parameter, you simply define an extension function on that type (with the type parameter set), like so:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlightjs highlight&quot;&gt;&lt;code class=&quot;language-kotlin hljs&quot; data-lang=&quot;kotlin&quot;&gt;fun List&amp;lt;Int&amp;gt;.sum(): Int {
+    var sum = 0
+    for (element in this) {
+        sum += element
+    }
+    return sum
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The key difference here is by using an extension function the compiler can serve as a tool to find this function when you are auto-completing for this generic type, and you show you what is available. In fact, I found the function (it&amp;#8217;s actually defined in &lt;code&gt;Iterable&amp;lt;Int&amp;gt;&lt;/code&gt;, but I find &lt;code&gt;List&amp;lt;Int&amp;gt;&lt;/code&gt; easier to read) above by typing the following:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlightjs highlight&quot;&gt;&lt;code class=&quot;language-kotlin hljs&quot; data-lang=&quot;kotlin&quot;&gt;listOf(1, 2, 3).sum()&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;As I began typing &quot;sum&quot;, the compiler is able to show me the &lt;code&gt;sum&lt;/code&gt; function exists, if I tried the same for &lt;code&gt;listOf(&quot;hello&quot;, &quot;world&quot;)&lt;/code&gt; it wouldn&amp;#8217;t display the &lt;code&gt;sum&lt;/code&gt; function, as no such extension function exists for &lt;code&gt;List&amp;lt;String&amp;gt;&lt;/code&gt;. What this means is you can different auto complete results depending on your &lt;em&gt;parameter type&lt;/em&gt;, not just your type! (this is something I had never seen in Java, and I&amp;#8217;m not sure if it&amp;#8217;s possible to achieve)&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;closing_remark&quot;&gt;Closing Remark&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I truly find this one of most powerful features for communicating the code I write to fellow developers. Previously I never felt 100% confident (no matter how well I organised my code base) that utility functions for specific generic types would be found. But so long as I choose sensible types and type parameters for my extensions functions I can be rest assured that the compiler will do the rest to surface the appropriate available functions to them.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;This isn&amp;#8217;t to say that organising your code no longer matters! Well organised code will always be necessary to be able to navigate and understand any code base, it&amp;#8217;s that a problem that couldn&amp;#8217;t be solved with well organised code now has a secret weapon!&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+	</description>
+    </item>
+    <item>
       <title>Configuring A Kotlin Docker Application In Gradle</title>
       <link>http://youdogood.github.io/blog/2022/04/configuring-a-kotlin-docker-application-in-gradle.html</link>
-      <pubDate>Fri, 1 Apr 2022 20:11:42 +0000</pubDate>
+      <pubDate>Mon, 4 Apr 2022 20:05:38 +0000</pubDate>
       <guid isPermaLink="false">2022/04/configuring-a-kotlin-docker-application-in-gradle.html</guid>
       	<description>
 	&lt;div class=&quot;sect1&quot;&gt;
@@ -351,7 +468,7 @@ egg is not a number!&lt;/pre&gt;
     <item>
       <title>Setting Up A Gradle Project</title>
       <link>http://youdogood.github.io/blog/2022/03/setting-up-a-gradle-project.html</link>
-      <pubDate>Fri, 1 Apr 2022 20:11:42 +0000</pubDate>
+      <pubDate>Mon, 4 Apr 2022 20:05:38 +0000</pubDate>
       <guid isPermaLink="false">2022/03/setting-up-a-gradle-project.html</guid>
       	<description>
 	&lt;div id=&quot;preamble&quot;&gt;
