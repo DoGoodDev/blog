@@ -17,7 +17,7 @@ Preferably in Kotlin
 
 == Goal Of This Post
 
-This post is to convey one of the features I find extremely useful when both reading and writing Kotlin.
+Often we find ourselves writing reusable functions on parameterized types (e.g. List<Int>) and reusing such functions saves time and reduces bugs, but despite these clear benefits developers often don't use these functions because they can be hard to find, therefore this post will explore two features of Kotlin that allow to compiler to find them for us, and display them during auto-complete.
 
 == The Problem
 
