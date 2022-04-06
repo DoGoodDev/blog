@@ -6,13 +6,13 @@
     <atom:link href="http://youdogood.github.io/blog/feed.xml" rel="self" type="application/rss+xml" />
     <description>JBake Bootstrap Template</description>
     <language>en-gb</language>
-    <pubDate>Mon, 4 Apr 2022 20:06:49 +0000</pubDate>
-    <lastBuildDate>Mon, 4 Apr 2022 20:06:49 +0000</lastBuildDate>
+    <pubDate>Wed, 6 Apr 2022 16:44:02 +0000</pubDate>
+    <lastBuildDate>Wed, 6 Apr 2022 16:44:02 +0000</lastBuildDate>
 
     <item>
       <title>Configuring A Kotlin JVM Project With Gradle</title>
       <link>http://youdogood.github.io/blog/2022/03/configuring-a-kotlin-jvm-project-with-gradle.html</link>
-      <pubDate>Mon, 4 Apr 2022 20:05:38 +0000</pubDate>
+      <pubDate>Wed, 6 Apr 2022 16:42:40 +0000</pubDate>
       <guid isPermaLink="false">2022/03/configuring-a-kotlin-jvm-project-with-gradle.html</guid>
       	<description>
 	&lt;div class=&quot;sect1&quot;&gt;
@@ -205,7 +205,7 @@ internal class NumbersTest {
     <item>
       <title>Extension Functions And Generics For Better Code Completion</title>
       <link>http://youdogood.github.io/blog/2022/04/extension-functions-and-generics-for-better-code-completion.html</link>
-      <pubDate>Mon, 4 Apr 2022 20:05:38 +0000</pubDate>
+      <pubDate>Wed, 6 Apr 2022 16:42:40 +0000</pubDate>
       <guid isPermaLink="false">2022/04/extension-functions-and-generics-for-better-code-completion.html</guid>
       	<description>
 	&lt;div class=&quot;sect1&quot;&gt;
@@ -233,7 +233,7 @@ internal class NumbersTest {
 &lt;h2 id=&quot;goal_of_this_post&quot;&gt;Goal Of This Post&lt;/h2&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;This post is to convey one of the features I find extremely useful when both reading and writing Kotlin.&lt;/p&gt;
+&lt;p&gt;Often we find ourselves writing reusable functions on parameterized types (e.g. List&amp;lt;Int&amp;gt;) and reusing such functions saves time and reduces bugs, but despite these clear benefits developers often don&amp;#8217;t use these functions because they can be hard to find, therefore this post will explore two features of Kotlin that allow to compiler to find them for us, and display them during auto-complete.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -322,7 +322,7 @@ internal class NumbersTest {
     <item>
       <title>Configuring A Kotlin Docker Application In Gradle</title>
       <link>http://youdogood.github.io/blog/2022/04/configuring-a-kotlin-docker-application-in-gradle.html</link>
-      <pubDate>Mon, 4 Apr 2022 20:05:38 +0000</pubDate>
+      <pubDate>Wed, 6 Apr 2022 16:42:40 +0000</pubDate>
       <guid isPermaLink="false">2022/04/configuring-a-kotlin-docker-application-in-gradle.html</guid>
       	<description>
 	&lt;div class=&quot;sect1&quot;&gt;
@@ -468,7 +468,7 @@ egg is not a number!&lt;/pre&gt;
     <item>
       <title>Setting Up A Gradle Project</title>
       <link>http://youdogood.github.io/blog/2022/03/setting-up-a-gradle-project.html</link>
-      <pubDate>Mon, 4 Apr 2022 20:05:38 +0000</pubDate>
+      <pubDate>Wed, 6 Apr 2022 16:42:40 +0000</pubDate>
       <guid isPermaLink="false">2022/03/setting-up-a-gradle-project.html</guid>
       	<description>
 	&lt;div id=&quot;preamble&quot;&gt;
